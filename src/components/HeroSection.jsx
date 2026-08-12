@@ -29,6 +29,13 @@
 // Import reusable UI components: Button and Badge
 
 /* --- YOUR IMPORTS GO HERE --- */
+import {motion,useScroll,useTransform} from "framer-motion";
+//the hero image file
+import  heroBeans from "../assets/hero-beans.png";
+//our custom resuable UI components
+import Button from "./ui/Button";
+import Badge from "./ui/Badge";
+
 
 
 // STEP 2: Animation Variants (outside the component)
@@ -83,3 +90,100 @@
 //   - Floating price badge (circular badge showing "FROM $14.99 per bag")
 
 /* --- YOUR COMPONENT CODE GOES HERE --- */
+//textVariants describes animation states for the heading Container
+//staggerChildren - dely each child's animation by .12s so the words dont appear all at once
+const textVariants = {
+    hidden: {}, //starting state
+    visible: {transition: {staggerChildren: 0.12}}//when this is visiable, it will stagger the children
+};
+
+const wordVariant = {
+    hidden: {opacity: 0, y: 60, rotateX: -40}, //hidden is equal to state before animation
+    visible: {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        transition: {duration: 0.7, ease: [0.25,0.46,0.45,0.94]}
+    }//visiable the final state: fully shown, in position, flat (no tilt)
+};
+
+//The main component, "export default" makes it usable in other files
+export default function HeroSection(){
+    //get a live value of how far the bage has scrolled vertically
+    //Hook
+    const {scrollY} = useScroll();
+
+    //useTransform maps the scroll postition to a new value
+    //as the user scrolls from 0px to 600px, shrik the image from 1.35x down to 0.9x
+    const imgScale = useTransform(scrollY, [0,600], [1.35,0.9]);
+
+    //from 0px to 500px of scroll, fade the image from fully visible (1) to invisible (0)
+    const imgOpacity = useTransform(scrollY, [0,500], [1,0]);
+
+    //from 0px to 600px of scroll, move the image down by 100px - parallax effect
+    const imgY = useTransform(scrollY, [0,600], [0,100]);
+
+    //everything returned here is waht actually shows on the screen (the jsx)
+    //NOTE: inside JSX, comments must be {/*  */}
+
+    return(
+
+        // <> .... </> this is a react fragment- it groups elements without an extra wrapper tag
+        <>
+        {/* Left Side - all the text content */}
+        <div id="home" className="hero-text-column">
+            {/* Badge (small pill at the top) initial = where it starts, animate = where it ends up. Here: fade in + slide up over 0.5s */}
+            <motion.div 
+            //inside of a custom element we imported
+                initial={{opacity: 0, y: 20}}
+                animate = {{opacity: 1, y: 0}}
+                transition = {{duration: 0.5, delay: 0.1}}
+            >   
+                {/* inserting a component inside this component */}
+                <Badge variant = "outline" className="mb-5">
+                    Premium Coffee Beans - Roasted Fresh Daily
+                </Badge>
+            </motion.div>
+
+            {/* Main headline - it uses "textvariants' to stagger its words
+                perspect: 600px and gives the 3d tilt effect (rotatex) a realistic depth
+                variants + initial = 'hidden' + animate='visiable' tie it to the animation
+                states defind at the top of the file
+                " */}
+            <motion.h1
+                className="h1-stack"
+                style={{margin: 0, perspective: "600px"}}
+                variants = {textVariants}
+                intial="hidden"
+                animate="visible"
+            
+            >
+                {/* EAch <motion.span> is one animated word using "wordVariant".
+                    display: "inline-block" is required so y/rotateX transform work
+                     */}
+                <motion.span variants={wordVariant} style={{display: "inline-block"}}>
+                    Your Place
+                </motion.span>
+                <br />
+                <motion.span 
+                    variants={wordVariant}
+                    className="muted"
+                    stye={{display: "inline-block"}}
+                >
+                    For Coffee
+                </motion.span>
+                <br />
+                <motion.span
+                    variants={wordVariant}
+                    style ={{display: "inline-block"}}
+                >
+                    Brewing
+                </motion.span>
+            </motion.h1>
+
+
+        </div>
+        </>
+
+    ); 
+}
