@@ -23,6 +23,7 @@
 // STEP 1: Import motion from "framer-motion"
 
 /* --- YOUR IMPORTS GO HERE --- */
+import {motion} from "framer-motion";
 
 
 // STEP 2: Create and export the RibbonTicker component
@@ -66,3 +67,56 @@
 // Look for the @keyframes ribbon-scroll rule.
 
 /* --- YOUR COMPONENT CODE GOES HERE --- */
+export default function RibbonTicker(){
+        const blends =[
+                "Jamaican Blue Mountain", 
+                "Yirgacheffe",
+                "Tanzania Peaberry",
+                "Panama Geisha", 
+                "Vietnamese Robusta",
+                "Brazilian Santos",
+                "Costa Rica Tarrazu",
+                "Guatemala Antigua",
+                "Kenya AA",
+                "Sumatra Mandheling",
+                "Kona",
+                "Colombian Supremo",
+                "Ethiopian Harrar", 
+                "Arabian Mocha",
+                "Red Sulawesi"
+        ];
+
+        //css scrolls left by exatcly half of the width and snaps back with an idenctical second half,
+        //the reset is invisible and the loop looks endless
+
+        const items =[...blends,...blends];
+
+    
+    
+    return(
+            // outer container - css clips whatever scrolls past the edges
+
+        <div className ="ribbon-ticker-container">
+            <div className="ribbon-ticker">
+                {/* the track is the strip that actually slides sideways */}
+                <div className="ribbon-track">
+
+                    {items.map((name,i) => (
+                        <motion.span
+                        //index is a safe key  here: the list never reorder
+                        key={i}
+                        className="ribbon-item"
+                        whileHover={{scale: 1.1,color: "#f0b955"}}
+                        transition={{type:"spring", stiffness: 300}}
+                        >
+                            {name}<span className="ribbon-dot">✦</span>
+
+                        </motion.span>
+                    ))}
+
+                </div>
+            </div>
+        </div>
+
+    );
+}
