@@ -59,7 +59,7 @@ import FooterSection from "./components/FooterSection";
 import NavBar from "./components/NavBar";
 import RibbonTicker from "./components/RibbonTicker";
 import FeaturesSection from "./components/FeaturesSection";
-
+import ProductShowCase from "./components/ProductShowcase";
 
 
 export default function App(){
@@ -83,7 +83,7 @@ export default function App(){
             </section>
             {/* PRODUCT SHOWCASE */}
             <section className="bg-cta">
-
+                <ProductShowCase/>
             </section>
             {/* CTA */}
             <section className="bg-cta">
